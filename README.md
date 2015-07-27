@@ -1,8 +1,10 @@
 # CacheBuilder
 
-TODO: Write a gem description
-
-## Installation
+Make dynamic pages look like it was always in cache. I was stuck in speeding
+up my Rails website. It was very slow even when there are very few queries.
+I found out that cache can save me. I started using the cache and wow my website
+became 400% faster. The only slowness was in the dynamic pages because first time when user sees it it was not in cache. So I have started writing this library to build the cache for the dynamic pages. Now when user visits my website first time
+it is way too fast.
 
 Add this line to your application's Gemfile:
 

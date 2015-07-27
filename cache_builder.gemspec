@@ -8,8 +8,12 @@ Gem::Specification.new do |spec|
   spec.version       = CacheBuilder::VERSION
   spec.authors       = ["Pratik"]
   spec.email         = ["pganvir@digitsexperts.com"]
-  spec.summary       = %q{TODO: Write a short summary. Required.}
-  spec.description   = %q{TODO: Write a longer description. Optional.}
+  spec.summary       = %q{Make look like everything is in cache.}
+  spec.description   = %q{Make dynamic pages look like it was always in cache. I was stuck in speeding
+up my Rails website. It was very slow even when there are very few queries.
+I found out that cache can save me. I started using the cache and wow my website
+became 400% faster. The only slowness was in the dynamic pages because first time when user sees it it was not in cache. So I have started writing this library to build the cache for the dynamic pages. Now when user visits my website first time
+it is way too fast.}
   spec.homepage      = ""
   spec.license       = "MIT"
 
