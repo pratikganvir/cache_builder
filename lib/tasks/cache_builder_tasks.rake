@@ -10,4 +10,8 @@ namespace :cache_builder do
   task :create_configuration => :environment do
     CacheBlockConfigWriter.create_config_file(Dir['app/**/*.*'])
   end
+
+  task :create_fragment_cache => :environment do
+  	CacheBuilder::Build.process(Rails.root)
+  end
 end

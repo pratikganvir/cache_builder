@@ -56,44 +56,45 @@ module FragmentCacheExtractor
   # <% end %>
 
   def self.extract_block(file_path)
-  	blocks = []
-  	block = []
-  	block_found = false
-  	nested_block_count = 0
-  	keywords = ["<%","do","if","unless","while","until"]
-    cache_block_info = {file_name: file_path, :cache_block_files => {}}
+    blocks = []
+    block = []
+    block_found = false
+    nested_block_count = 0
+    keywords = ["do","if","unless","while","until"]
+        cache_block_info = {file_name: file_path, :cache_block_files => {}}
 
-  	File.open(file_path).each_line.with_index do |line,index|
+    File.open(file_path).each_line.with_index do |line,index|
         if line.include?("<%") && line.include?("cache") && line.include?("do") && !line.include?("end")
-        	block_found = true
-        	block = []
+          block_found = true
+          block = []
         end
 
-    	  if block_found
-    	    block << line
+      if block_found
+          block << line
         end
 
-        if block_found && keywords.any? { |word| line.include?(word) } && !line.include?("end")
-        	nested_block_count += 1
+        if block_found && line.include?("<%") && keywords.any? { |word| line.include?(word) } && !line.include?("end")  
+          nested_block_count += 1
         end
 
-        if block_found && nested_block_count > 0 && line.include?("<%") && line.include?("end")
-        	nested_block_count -= 1
+        if block_found && nested_block_count > 0 && line.include?("<%") && (line.include?(" end ")||line.include?("<%end%>")) && line.include?("%>")
+          nested_block_count -= 1
         end
 
         if block_found && nested_block_count == 0 && line.include?("<%") && line.include?("end")
-        	block_found = false
-        	blocks << Array.new(block)
+          block_found = false
+          blocks << Array.new(block)
         end
 
-  	end
+    end
 
     if blocks.present?
+      
       directory_name = "cache_builder/"+File.dirname(file_path).to_s.gsub("app/","")
       unless File.directory?(directory_name)
         FileUtils.mkdir_p(directory_name)
       end
-      blocks = blocks.each do |block|
+      blocks.each do |block|
         file_name = SecureRandom.urlsafe_base64
         file_base_name = File.basename(file_path,".erb").gsub(".html","")
         File.open("#{directory_name}/_#{file_base_name}_#{file_name}.html.erb", 'w') do |f|
@@ -101,7 +102,8 @@ module FragmentCacheExtractor
         end
         cache_block_info[:cache_block_files].merge!({
           block_id: file_name,
-          file_name: "#{directory_name}/_#{file_base_name}_#{file_name}.html.erb"
+          file_name: "#{directory_name}/_#{file_base_name}_#{file_name}",
+          input: {}
         })
       end
     end
